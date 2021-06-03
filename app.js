@@ -30,6 +30,10 @@ app.get('/', function(req, res){
     res.render('front-page')
 })
 
+app.get('/categories', function(req, res){
+    res.render('categories')
+})
+
 // DB Connection
 var connection = mysql.createConnection({
     host: 'localhost',
