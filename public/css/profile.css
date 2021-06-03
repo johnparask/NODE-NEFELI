@@ -1,0 +1,155 @@
+*{
+    margin:0;
+    padding:0;
+
+}
+
+
+.info-table div{
+    padding: 0.6rem;
+    font-size: 1.1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.info-table .that{
+
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border: 2px solid black;
+    margin-right: 0.5rem;
+
+}
+.info-table .that1{
+    background-color: rgba(0, 0, 0, .6);
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border: 2px solid black;
+    color: white;
+    font-size: 1.1rem;
+
+}
+
+.info-table .thatBtn button{
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border: 2px solid black;
+
+}
+
+.info-table .thatBtn button:hover{
+    background-color: #FF4242;
+    color: white;
+}
+
+.info-table .changePsw, .info-table .changePic{
+    font-size: 1.1rem;
+    padding: 0.3rem 0.4rem;
+    background-color: rgba(0, 0, 0, .6);
+    border-radius: 0.5rem;
+    border: 2px solid black;
+    color: white;
+}
+
+.info-table .changePsw:hover, .info-table .changePic:hover{
+    background-color: #FF4242;
+    
+}
+
+/* the bodybody */
+
+.bodyBody .chooseBtn{
+    font-size: 1.4rem;
+    font-weight: 900;
+}
+
+
+.bodyBody-posts{
+    padding: 1rem;
+    border: 2px solid black;
+    border-radius: 1.5rem;
+    background-color:rgba(0, 0, 0, .6);
+    color: white;
+}
+
+.bodyBody-subs{
+
+    color: rgb(97, 94, 94);
+    padding: 1rem;
+    border: 2px solid black;
+    border-radius: 1.5rem;
+}
+
+.bodyBody-posts:hover,.bodyBody-subs:hover{
+    color: white;
+    background-color:#FF4242;
+    
+    
+}
+
+
+/* the post  */
+
+.posts{
+    display: block;
+}
+.posts ul{
+    list-style-type: none;
+    /* margin: 0rem 7rem; */
+
+}
+
+.posts div{
+    background-color:rgba(0, 0, 0, .6);
+
+    /* margin: 3rem 20rem;
+    padding: 15px ; */
+    border-radius: 10px;
+    color: white;
+    /* width: 40% */
+}
+
+.posts div p{
+    min-height: 5em;
+}
+
+.posts div label:first-child{
+    padding: 0.2em 2em;
+    background: #FF4242;
+    border-radius: 6px;
+}
+
+.posts div button{
+    padding: 0.2em 2em;
+    background: #FF4242;
+    border-radius: 6px;
+    color: white;
+}
+
+.posts a {
+    text-decoration: none;
+    color: initial;
+}
+
+/* posts 2 */
+.posts2{
+    display: none;
+}
+.posts2 ul{
+    list-style-type: none;
+    margin-left: 5rem;
+}
+
+.posts2 div{
+    background-color:rgba(0, 0, 0, .6);
+
+    border-radius: 10px;
+    color: white;
+    font-size: 1.3rem;
+}
+
+
+.posts2 a {
+    text-decoration: none;
+    color: initial;
+}
