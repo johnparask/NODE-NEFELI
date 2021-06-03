@@ -1,7 +1,7 @@
 // requires
 const express = require('express')
 const mysql = require('mysql')
-const exphbs = require('hbs');
+const exphbs = require('express-handlebars');
 const path = require('path')
 
 
@@ -11,9 +11,14 @@ const app = express()
 // initialize creds
 const port = 2710
 
-// View Engine Setup
-app.set('views', path.join(__dirname))
+app.engine('hbs', exphbs({
+    defaultLayout: 'main',
+    extname: '.hbs'
+}));
+
 app.set('view engine', 'hbs')
+
+app.set('views', path.join(__dirname, '/src/views'));
 
 app.get('/', function(req, res){
     res.render('front-page')
