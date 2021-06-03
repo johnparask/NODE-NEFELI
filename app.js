@@ -41,14 +41,16 @@ app.use('/js', express.static(__dirname + 'public/js'))
 
 
 app.get('/', function(req, res){
-    //let categoryNames = [];
-
-    connection.query('SELECT * FROM categories', function (err, result, fields) {
+    connection.query('SELECT * FROM categories', function (err, categories, fields) {
         if(err) throw err
-
-        res.render('front-page', {result})
+        connection.query('SELECT q.id,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY comments DESC LIMIT 9;', function (err, trending, fields) {
+            if(err) throw err
+            connection.query('SELECT q.id,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY likes DESC;', function (err, top, fields) {
+                if(err) throw err
+                res.render('front-page', {categories, trending, top})
+            });
+        });
     });
-
 })
 
 app.get('/categories', function(req, res){
