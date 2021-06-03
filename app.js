@@ -12,21 +12,29 @@ const app = express()
 const port = 2710
 
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'readit',
-  port     : '33060'
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'readit',
+    port: '33060'
 });
- 
-connection.connect();
- 
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', results[0].solution);
+
+
+connection.connect(function (err) {
+    if (err) throw err;
+    connection.query("SELECT FirstName, Username FROM user", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+    });
 });
- 
-connection.end();
+
+
+
+
+
+
+
+
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
