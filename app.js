@@ -11,6 +11,20 @@ const app = express()
 // initialize creds
 const port = 2710
 
+// DB Connection
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'readit',
+    port: '33060'
+});
+
+connection.connect(function(err) {
+    if (err) throw err
+
+});
+
 app.engine('hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs'
@@ -27,26 +41,14 @@ app.use('/js', express.static(__dirname + 'public/js'))
 
 
 app.get('/', function(req, res){
-    let categoryNames = [];
-    connection.connect(function (err) {
-        if (err) throw err;
-        connection.query("SELECT * FROM categories", function (err, result, fields) {
-            if (err) throw err;
+    //let categoryNames = [];
 
-            result.forEach(element => {
-                categoryNames.push(element.categoryName)
-            });
-            console.log(categoryNames)
-            connection.end(function(err) {
-                if (err) {
-                    return console.log('error:' + err.message);
-                }
-                console.log('Close the database connection.');
-            });
-            res.render('front-page')
-        });
+    connection.query('SELECT * FROM categories', function (err, result, fields) {
+        if(err) throw err
+
+        res.render('front-page', {result})
     });
-    //res.render('front-page')
+
 })
 
 app.get('/categories', function(req, res){
@@ -61,14 +63,6 @@ app.get('/comments', function(req, res){
     res.render('comments')
 })
 
-// DB Connection
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'readit',
-    port: '33060'
-});
 
 
 
