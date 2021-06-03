@@ -27,16 +27,26 @@ app.use('/js', express.static(__dirname + 'public/js'))
 
 
 app.get('/', function(req, res){
-
-    /*connection.connect(function (err) {
+    let categoryNames = [];
+    connection.connect(function (err) {
         if (err) throw err;
         connection.query("SELECT * FROM categories", function (err, result, fields) {
-            if (err) throw err;  
-            console.log(result[0].Username);
+            if (err) throw err;
+
+            result.forEach(element => {
+                categoryNames.push(element.categoryName)
+            });
+            console.log(categoryNames)
+            connection.end(function(err) {
+                if (err) {
+                    return console.log('error:' + err.message);
+                }
+                console.log('Close the database connection.');
+            });
             res.render('front-page')
         });
-    });*/
-    res.render('front-page')
+    });
+    //res.render('front-page')
 })
 
 app.get('/categories', function(req, res){
@@ -59,12 +69,6 @@ var connection = mysql.createConnection({
     database: 'readit',
     port: '33060'
 });
-
-
-
-
-
-
 
 
 
