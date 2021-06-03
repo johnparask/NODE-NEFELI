@@ -40,6 +40,7 @@
     border-radius: 10px;
     border: 2px solid white;
     outline: none;
+    min-width: 6rem;
 }
 
 @media (max-width: 608px){

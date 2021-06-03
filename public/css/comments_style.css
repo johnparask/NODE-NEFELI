@@ -4,18 +4,10 @@
 }
 
 /* ----------categorie name ------------ */
-.categorie-name {
-    background: rgba(0, 0, 0, .6);
-    /* text-align: center; */
-    margin: 2em 44em;
-    padding: 0.3em 7em;
-    color: white;
-    border-radius: 0.5em;
-    display: inline-block;
-}
-
 
 .categorie-name h1{
+    background: rgba(0, 0, 0, .6);
+
     color: white;
     border-radius: 0.2em;
     display: inline-block;
@@ -41,44 +33,34 @@
 
 
 .categorie-info .ci_box {
-    margin: 5em;
-    padding: 5em;
+    
     background-color: rgba(0, 0, 0, .6);
     color: white;
+    border-radius: 0.9rem;
+    
 }
 
-.categorie-info p {
-    width: 15em;
-}
 
-.the_body {
-    display: flex;
-}
 
 /* ----------posts ------------ */
 
-.posts {
-    /* background-color: rgba(0, 0, 0, .6); */
-    width: 600px;
-    margin: 10px;
-    padding: 10px;
+.posts{
     color: white;
 }
 
-.posts div {
-    background-color: rgba(0, 0, 0, .6);
-    width: auto;
-    margin: 10px;
-    padding: 10px;
+.posts div{
+    background-color:rgba(0, 0, 0, .6);
+    border-radius: 6px;
 }
 
 .posts div p{
     min-height: 5em;
 }
 
-.posts div label:first-child {
-    padding: 0.2em 2em;
+.posts div label:first-child{
+    padding: 0.2em 1.5em 0.2em 0.5em;
     background: #FF4242;
+    border-radius: 6px;
 }
 
 .posts div button{
@@ -97,13 +79,13 @@
 
 /* -------comments---------- */
 
-.post_comment {
+.post_comment{
     background-color: rgba(0, 0, 0, .6);
-    width: 600px;
-    margin: 10px;
-    padding: 10px;
     display: flex;
+
+    border-radius: 6px;
 }
+
 .txtArea{
     resize: none;
     flex-grow:1;
@@ -131,9 +113,10 @@
 }
 
 
-.the_comment {
+.the_comment{
+    
     background: rgba(0, 0, 0, .6);
-    width: 600px;
+    
     margin: 10px;
     padding: 10px;
     color: white;
@@ -160,7 +143,3 @@
     border-radius: 6px;
     color: white;
 }
-
-
-
-
