@@ -27,7 +27,28 @@ app.use('/js', express.static(__dirname + 'public/js'))
 
 
 app.get('/', function(req, res){
+
+    /*connection.connect(function (err) {
+        if (err) throw err;
+        connection.query("SELECT * FROM categories", function (err, result, fields) {
+            if (err) throw err;  
+            console.log(result[0].Username);
+            res.render('front-page')
+        });
+    });*/
     res.render('front-page')
+})
+
+app.get('/categories', function(req, res){
+    res.render('categories')
+})
+
+app.get('/posts', function(req, res){
+    res.render('posts')
+})
+
+app.get('/comments', function(req, res){
+    res.render('comments')
 })
 
 // DB Connection
@@ -40,13 +61,6 @@ var connection = mysql.createConnection({
 });
 
 
-connection.connect(function (err) {
-    if (err) throw err;
-    connection.query("SELECT FirstName, Username FROM user", function (err, result, fields) {
-        if (err) throw err;
-        console.log(result[0].Username);
-    });
-});
 
 
 
