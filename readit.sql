@@ -21,6 +21,7 @@ CREATE TABLE `categories` (
 );
 CREATE TABLE `posts` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `title` text NOT NULL,
   `content` longtext NOT NULL,
   `likes` int unsigned NOT NULL DEFAULT '0',
   `comments` int unsigned NOT NULL,

@@ -15,9 +15,9 @@ const port = 2710
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'root',
     database: 'readit',
-    port: '33060'
+    port: '3306'
 });
 
 connection.connect(function(err) {
@@ -43,7 +43,7 @@ app.use('/js', express.static(__dirname + 'public/js'))
 app.get('/', function(req, res){
     connection.query('SELECT * FROM categories', function (err, categories, fields) {
         if(err) throw err
-        connection.query('SELECT q.id,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY comments DESC LIMIT 9;', function (err, trending, fields) {
+        connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY comments DESC LIMIT 9;', function (err, trending, fields) {
             if(err) throw err
             connection.query('SELECT q.id,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY likes DESC;', function (err, top, fields) {
                 if(err) throw err
