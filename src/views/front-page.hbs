@@ -18,9 +18,12 @@
                                 </label>
 
                                 <br>
-                                <p>{{this.content}}</p>
+                                <div class="content">
+                                    <p>{{this.content}}</p>
+                                </div>
                                 <br>
-                                <label for="likes" class="likesNumber0">
+
+                                <label for="likes" class="likesNumber0 position-absolute" style="bottom: 0;">
                                     Likes: {{this.likes}} Comments: {{this.comments}}
                                 </label>
 
@@ -48,7 +51,7 @@
 
 
                     {{#each top}}
-                    <a href="posts/{{this.id}}" class="text-decoration-none">
+                    <a href="posts?id={{this.id}}" class="text-decoration-none">
                         <div class="card mb-2">
                             <div class="card-header">
                                 {{this.title}} <span> # {{this.categoryName}}</span>
@@ -89,7 +92,8 @@
                             {{#each categories}}
                             <a href="/category?id={{this.id}}">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{this.categoryName}} <span class="badge badge-secondary">{{this.subscriptions}}</span>
+                                    {{this.categoryName}} <span
+                                        class="badge badge-secondary">{{this.subscriptions}}</span>
                                 </li>
                             </a>
 
