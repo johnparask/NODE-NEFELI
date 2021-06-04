@@ -71,22 +71,25 @@
 
                             <div class="dropdown col-3 my-auto">
 
+                                {{#if loggedin}}
+
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
                                     <i class="fas fa-user"></i>
-                                    {{#if loggedin}}
-                                        {{loggedin}}
-                                    {{else}}
-                                        Not Logged in but still a good pupper
-                                    {{/if}}
+                                    {{loggedin}}
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
                                     <a class="dropdown-item" href="profile">View profile</a>
-
                                 </div>
+
+                                {{else}}
+
+                                <button class="btn btn-secondary" type="button" onclick="location.href='login'">
+                                    Login/Signup
+                                </button>
+
+                                {{/if}}
 
                             </div>
 

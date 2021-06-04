@@ -24,9 +24,9 @@ const port = 2710
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '',
     database: 'readit',
-    port: '3306'
+    port: '33060'
 });
 
 connection.connect(function (err)
@@ -369,7 +369,7 @@ app.post('/login', function (req, res)
                         connection.query('INSERT INTO auth_tokens VALUES(NULL,?,?,0,?)', [user[0].id, authToken, expireDate], function (err, results,)
                         {
                             res.cookie('readit_auth', authToken, { expires: expireDate });
-                            res.send("Loggedin");
+                            res.redirect("/");
                         })
                     }
                     else
