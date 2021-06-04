@@ -62,7 +62,7 @@ app.get('/', function (req, res)
             {
                 if (err) throw err
                 let a_categories = categories;
-                res.render('front-page', { categories, trending, top , a_categories})
+                res.render('front-page', { categories, trending, top, a_categories })
             });
         });
     });
@@ -74,16 +74,23 @@ app.get('/categories', function (req, res)
     connection.query('SELECT cat.id,cat.categoryName,cat.info,cat.creatorID,cat.subscriptions,cat.posts,us.username FROM categories cat LEFT JOIN users us ON cat.creatorID = us.id', function (err, categories, fields)
     {
         if (err) throw err
-        res.render('categories', { categories })
+        connection.query('SELECT * FROM categories', function (err, a_categories, fields)
+        {
+            res.render('categories', { categories, a_categories });
+        })
     });
 })
 
 app.get('/category', function (req, res)
 {
     const catid = req.query.id;
-    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName,c.posts,c.subscriptions,c.info FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE c.id = ? ORDER BY q.createdDate DESC;',[catid], function (err, posts, fields)
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName,c.posts,c.subscriptions,c.info FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE c.id = ? ORDER BY q.createdDate DESC;', [catid], function (err, posts, fields)
     {
-        return res.render("category" , {posts});
+        connection.query('SELECT * FROM categories', function (err, a_categories, fields)
+        {
+            return res.render("category", { posts, a_categories });
+        })
+
     })
 })
 
@@ -91,61 +98,71 @@ app.get('/category', function (req, res)
 app.get('/posts', function (req, res)
 {
     const postid = req.query.id;
-    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName,com.content as comCon,com.creatorID as comCreator,us.username as commentUsername, com.date as comDate FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID LEFT JOIN comments com ON q.id = com.postID LEFT JOIN users us ON com.creatorID = us.ID WHERE q.id = ?', [postid], function (err, post, fields)
+    connection.query('SELECT * FROM categories', function (err, a_categories, fields)
     {
-        //check if user is logged in
-        if (req.cookies.readit_auth != undefined)
+        connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName,com.content as comCon,com.creatorID as comCreator,us.username as commentUsername, com.date as comDate FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID LEFT JOIN comments com ON q.id = com.postID LEFT JOIN users us ON com.creatorID = us.ID WHERE q.id = ?', [postid], function (err, post, fields)
         {
-            //might be logged in, cookie found
-            connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+            //check if user is logged in
+            if (req.cookies.readit_auth != undefined)
             {
-                if (token.length > 0)
+                //might be logged in, cookie found
+                connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
                 {
-                    if (token)
+                    if (token.length > 0)
                     {
-                        //user is logged in, verify if the user is the creator
-                        if (token[0].userID == post[0].creatorID)
+                        if (token)
                         {
-                            //user is the creator
-                            return res.render("posts", { post, canlike: false, creator: true });
-                        }
-                        else
-                        {
-                            //user is not the creator
-                            //check if user liked the post already
-                            connection.query('SELECT * from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, liked, fields)
+                            //user is logged in, verify if the user is the creator
+                            if (token[0].userID == post[0].creatorID)
                             {
-                                if (liked.length > 0)
+                                //user is the creator
+                                return res.render("posts", { post, canlike: false, creator: true, a_categories });
+                            }
+                            else
+                            {
+                                //user is not the creator
+                                //check if user liked the post already
+                                connection.query('SELECT * from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, liked, fields)
                                 {
-                                    res.render("posts", { post, canlike: true, likeBtn: "Dislike" });
-                                    return;
-                                }
-                                return res.render("posts", { post, canlike: true, likeBtn: "Like" });
-                            })
-                        }
-                    } else
-                        return res.render("posts", { post, canlike: false });
-                }
-                else
-                    return res.render("posts", { post, canlike: false });
-            });
-        }
-        else
-        {
-            //user not logged in
-            return res.render("posts", { post, canlike: false });
-        }
+                                    if (liked.length > 0)
+                                    {
+                                        res.render("posts", { post, canlike: true, likeBtn: "Dislike", a_categories });
+                                        return;
+                                    }
+                                    return res.render("posts", { post, canlike: true, likeBtn: "Like", a_categories });
+                                })
+                            }
+                        } else
+                            return res.render("posts", { post, canlike: false, a_categories });
+                    }
+                    else
+                        return res.render("posts", { post, canlike: false, a_categories });
+                });
+            }
+            else
+            {
+                //user not logged in
+                return res.render("posts", { post, canlike: false, a_categories });
+            }
+        });
     });
 })
 
 app.get('/comments', function (req, res)
 {
-    res.render('comments')
+    connection.query('SELECT * FROM categories', function (err, a_categories, fields)
+    {
+        res.render('comments', { a_categories })
+    })
+
 })
 
 app.get('/register', function (req, res)
 {
-    res.redirect("/login");
+    connection.query('SELECT * FROM categories', function (err, a_categories, fields)
+    {
+        res.redirect("/login",{ a_categories });
+    })
 })
 
 app.get('/login', function (req, res)
