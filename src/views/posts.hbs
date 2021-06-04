@@ -1,14 +1,15 @@
 <link rel="stylesheet " href="css/posts_style.css">
 
-{{#each post}}
 
-<p>{{this.title}}</p>
-<p>{{this.content}};</p>
-<p>by {{this.username}}</p>
-<p>likes {{this.likes}}</p>
+<p>{{post.[0].title}}</p>
+<p>{{post.[0].content}};</p>
+<p>by {{post.[0].username}}</p>
+<p>likes {{post.[0].likes}}</p>
 
-{{#if ../canlike}}
-<button class="btn btn-primary" onclick="location.href='/like?id={{this.id}}'">{{../likeBtn}}</button>
+{{#if canlike}}
+<button class="btn btn-primary" onclick="location.href='/like?id={{post.[0].id}}'">{{likeBtn}}</button>
 {{/if }}
 
+{{#each post}}
+<p><h4>User: {{this.commentUsername}} commented: </h4>{{this.comCon}}</p>
 {{/each}}

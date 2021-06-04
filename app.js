@@ -77,7 +77,7 @@ app.get('/categories', function (req, res)
 app.get('/posts', function (req, res)
 {
     const postid = req.query.id;
-    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE q.id = ?;', [postid], function (err, post, fields)
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName,com.content as comCon,com.creatorID as comCreator,us.username as commentUsername FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID LEFT JOIN comments com ON q.id = com.postID LEFT JOIN users us ON com.creatorID = us.ID WHERE q.id = ?', [postid], function (err, post, fields)
     {
         //check if user is logged in
         if (req.cookies.readit_auth != undefined)
@@ -174,7 +174,6 @@ app.get('/login', function (req, res)
 
 app.get('/like', function (req, res)
 {
-
     const postid = req.query.id;
 
     //check if user is logged in
