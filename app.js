@@ -401,9 +401,16 @@ app.post('/createPost', function (req, res)
                         return res.send("Post can not be empty");
                     }
                     var currentDate = new Date(Date.now());
-                    connection.query('INSERT INTO posts VALUES(NULL,?,?,0,0,?,?,?)', [req.body.title, req.body.c_posts,req.body.post_category, token[0].userID, currentDate], function (err, newpost, fields)
+                    connection.query('INSERT INTO posts VALUES(NULL,?,?,0,0,?,?,?)', [req.body.title, req.body.c_posts, req.body.post_category, token[0].userID, currentDate], function (err, newpost, fields)
                     {
-                        return res.redirect("/posts?id=" + newpost.insertId);
+                        connection.query('SELECT posts from categories WHERE id = ?', [req.body.post_category], function (err, cat, fields)
+                        {
+                            let increasedPosts = cat[0].posts + 1;
+                            connection.query('UPDATE categories SET posts = ? WHERE id = ?', [increasedPosts, req.body.post_category], function (err, updatedCat, fields)
+                            {
+                                return res.redirect("/posts?id=" + newpost.insertId);
+                            })
+                        })
                     })
                 }
                 else
