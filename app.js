@@ -80,7 +80,7 @@ app.get('/categories', function (req, res)
 app.get('/category', function (req, res)
 {
     const catid = req.query.id;
-    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE q.id = ? ORDER BY q.createdDate DESC;',[catid], function (err, posts, fields)
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE c.id = ? ORDER BY q.createdDate DESC;',[catid], function (err, posts, fields)
     {
         return res.render("category" , {posts});
     })
