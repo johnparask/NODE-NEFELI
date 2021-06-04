@@ -115,8 +115,8 @@
                     <div>
                         <select class="mx-5 mt-5">
                             <option value="" selected disabled>Choose Category</option>
-                             {{#each categories}}
-                                
+                             {{#each a_categories}}
+                                <option value="{{this.id}}">{{this.categoryName}}</option>
                              {{/each}}
                         </select>
                     </div>
