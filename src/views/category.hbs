@@ -49,13 +49,15 @@
 
     <!-- post area -->
     <div class="posts_box col-5">
-        <!-- create posts -->
-        <div class="create_posts p-2">
-            <textarea id="c_posts" class="txtArea" name="c_posts" rows="4" cols="50"
-                placeholder="Write your post..."></textarea>
-            <button class="txtAreaBtn"> Create Post</button>
-        </div>
-
+        <form action="/createPost" method="POST">
+            <!-- create posts --> <input class="mx-5 mt-5" type="text" name="title" required>
+            <input type="hidden" value="{{posts.[0].catID}}" name="post_category">
+            <div class="create_posts p-2">
+                <textarea id="c_posts" class="txtArea" name="c_posts" rows="4" cols="50"
+                    placeholder="Write your post..." required></textarea>
+                <button class="txtAreaBtn"> Create Post</button>
+            </div>
+        </form>
         <!-- the posts -->
         <div class="posts ">
             <ul>
