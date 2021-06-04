@@ -77,60 +77,50 @@ app.get('/categories', function (req, res)
 app.get('/posts', function (req, res)
 {
     const postid = req.query.id;
-
-    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE q.id = ?;', [postid], function (err, post, fields)
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE q.id = ?;', [postid], function (err, post, fields)
     {
-        if (err)
+        //check if user is logged in
+        if (req.cookies.readit_auth != undefined)
         {
-            console.log(err);
-            res.sendStatus(500);
-            return;
-        }
-        if (post != undefined)
-        {
-            if (post.length > 0)
+            //might be logged in, cookie found
+            connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
             {
-                if (post)
+                if (token.length > 0)
                 {
-                    //check if user is the owner
-                    if (req.cookies.readit_auth != undefined)
+                    if (token)
                     {
-                        connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+                        //user is logged in, verify if the user is the creator
+                        if (token[0].userID == post[0].creatorID)
                         {
-                            if (err)
+                            //user is the creator
+                            return res.render("posts", { post, canlike: false, creator: true });
+                        }
+                        else
+                        {
+                            //user is not the creator
+                            //check if user liked the post already
+                            connection.query('SELECT * from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, liked, fields)
                             {
-                                console.log(err);
-                                return res.sendStatus(500);
-                            }
-                            if (token.length > 0)
-                            {
-                                if (token)
+                                if (liked.length > 0)
                                 {
-                                    //token verified in database
-                                    //check if token is expired
-                                    if (token[0].expireDate <= new Date(Date.now()))
-                                    {
-                                        //token is expired
-                                        //update expired flag
-                                        connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,)
-                                        {
-                                            return res.render('posts', { post, ismine: false })
-                                        })
-                                    }
-                                    else
-                                    {
-                                        return res.render('posts', { post, ismine: true })
-                                    }
+                                    res.render("posts", { post, canlike: true, likeBtn:"Dislike" });
+                                    return;
                                 }
-                            }
-                            return res.render('posts', { post, ismine: false })
-                        })
+                                return res.render("posts", { post, canlike: true, likeBtn:"Like" });
+                            })
+                        }
                     }
                 }
-            }
+                else
+                    return res.render("posts", { post, canlike: false });
+            });
+        }
+        else
+        {
+            //user not logged in
+            return res.render("posts", { post, canlike: false });
         }
     });
-
 })
 
 app.get('/comments', function (req, res)
@@ -150,12 +140,7 @@ app.get('/login', function (req, res)
         //auth token found
         connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
         {
-            if (err)
-            {
-                console.log(err);
-                res.sendStatus(500);
-                return;
-            }
+            if (err) throw err;
 
             if (token.length > 0)
             {
@@ -170,24 +155,20 @@ app.get('/login', function (req, res)
                         connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,)
                         {
                             res.send("Session expired, please login!");
-                            return;
                         })
                     }
                     else
-                    {
                         res.send("Logged in under: " + token[0].userID);
-                        return;
-                    }
-                }
+                } else
+                    res.render('login-signup')
             }
-            res.render('login-signup')
-            return;
+            else
+                res.render('login-signup')
         })
     }
     else
     {
         res.render('login-signup')
-        return;
     }
 })
 
@@ -203,12 +184,7 @@ app.post('/login', function (req, res)
         {
             if (user[0])
             {
-                if (err)
-                {
-                    console.log(err);
-                    res.sendStatus(500);
-                    return;
-                }
+                if (err) throw err;
 
                 bcrypt.compare(req.body.password, user[0].password, function (err, result)
                 {

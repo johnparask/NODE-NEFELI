@@ -6,8 +6,9 @@
 <p>{{this.content}};</p>
 <p>by {{this.username}}</p>
 <p>likes {{this.likes}}</p>
-{{/each}}
 
-{{#unless  ismine}}
-<button class="btn btn-primary" onclick="">LIKE</button>
-{{/unless }}
+{{#if ../canlike}}
+<button class="btn btn-primary" onclick="/like?id={{this.id}}">{{../likeBtn}}</button>
+{{/if }}
+
+{{/each}}
