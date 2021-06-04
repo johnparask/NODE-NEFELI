@@ -73,9 +73,19 @@ app.get('/categories', function (req, res)
     connection.query('SELECT cat.id,cat.categoryName,cat.info,cat.creatorID,cat.subscriptions,cat.posts,us.username FROM categories cat LEFT JOIN users us ON cat.creatorID = us.id', function (err, categories, fields)
     {
         if (err) throw err
-        res.render('categories' , {categories})
+        res.render('categories', { categories })
     });
 })
+
+app.get('/category', function (req, res)
+{
+    const catid = req.query.id;
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE q.id = ? ORDER BY q.createdDate DESC;',[catid], function (err, posts, fields)
+    {
+        return res.render("category" , {posts});
+    })
+})
+
 
 app.get('/posts', function (req, res)
 {
