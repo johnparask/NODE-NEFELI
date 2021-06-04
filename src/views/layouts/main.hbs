@@ -75,9 +75,11 @@
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                                     <i class="fas fa-user"></i>
-
-                                    username
-
+                                    {{#if loggedin}}
+                                        {{loggedin}}
+                                    {{else}}
+                                        Not Logged in but still a good pupper
+                                    {{/if}}
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -114,7 +116,7 @@
                 <form action="/createPost" method="POST">
 
                     <div>
-                        <input  class="mx-5 mt-5" type="text" name="title">
+                        <input class="mx-5 mt-5" type="text" name="title">
                         <select class="mx-5 mt-5" name="post_category">
                             <option value="" selected disabled>Choose Category</option>
                             {{#each a_categories}}

@@ -54,15 +54,42 @@ app.get('/', function (req, res)
 {
     connection.query('SELECT * FROM categories', function (err, categories, fields)
     {
-        if (err) throw err
         connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY comments DESC LIMIT 9;', function (err, trending, fields)
         {
-            if (err) throw err
             connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID ORDER BY likes DESC;', function (err, top, fields)
             {
-                if (err) throw err
-                let a_categories = categories;
-                res.render('front-page', { categories, trending, top, a_categories })
+                if (req.cookies.readit_auth != undefined)
+                {
+                    connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+                    {
+                        if (token.length > 0)
+                        {
+                            if (token)
+                            {
+                                connection.query('SELECT username from users WHERE id = ?', [token[0].userID], function (err, user, fields)
+                                {
+                                    let a_categories = categories;
+                                    return res.render('front-page', { categories, trending, top, a_categories, loggedin: user[0].username })
+                                })
+                            }
+                            else
+                            {
+                                let a_categories = categories;
+                                return res.render('front-page', { categories, trending, top, a_categories })
+                            }
+                        }
+                        else
+                        {
+                            let a_categories = categories;
+                            return res.render('front-page', { categories, trending, top, a_categories })
+                        }
+                    })
+                }
+                else
+                {
+                    let a_categories = categories;
+                    return res.render('front-page', { categories, trending, top, a_categories })
+                }
             });
         });
     });
@@ -76,7 +103,28 @@ app.get('/categories', function (req, res)
         if (err) throw err
         connection.query('SELECT * FROM categories', function (err, a_categories, fields)
         {
-            res.render('categories', { categories, a_categories });
+            if (req.cookies.readit_auth != undefined)
+            {
+                connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+                {
+                    if (token.length > 0)
+                    {
+                        if (token)
+                        {
+                            connection.query('SELECT username from users WHERE id = ?', [token[0].userID], function (err, user, fields)
+                            {
+                                return res.render('categories', { categories, a_categories, loggedin: user[0].username });
+                            })
+                        }
+                        else
+                            return res.render('categories', { categories, a_categories });
+                    }
+                    else
+                        return res.render('categories', { categories, a_categories });
+                })
+            }
+            else
+                return res.render('categories', { categories, a_categories });
         })
     });
 })
@@ -88,7 +136,28 @@ app.get('/category', function (req, res)
     {
         connection.query('SELECT * FROM categories', function (err, a_categories, fields)
         {
-            return res.render("category", { posts, a_categories });
+            if (req.cookies.readit_auth != undefined)
+            {
+                connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+                {
+                    if (token.length > 0)
+                    {
+                        if (token)
+                        {
+                            connection.query('SELECT username from users WHERE id = ?', [token[0].userID], function (err, user, fields)
+                            {
+                                return res.render("category", { posts, a_categories, loggedin: user[0].username });
+                            })
+                        }
+                        else
+                            return res.render("category", { posts, a_categories });
+                    }
+                    else
+                        return res.render("category", { posts, a_categories });
+                })
+            }
+            else
+                return res.render("category", { posts, a_categories });
         })
 
     })
@@ -112,26 +181,30 @@ app.get('/posts', function (req, res)
                     {
                         if (token)
                         {
-                            //user is logged in, verify if the user is the creator
-                            if (token[0].userID == post[0].creatorID)
+                            connection.query('SELECT username from users WHERE id = ?', [token[0].userID], function (err, user, fields)
                             {
-                                //user is the creator
-                                return res.render("posts", { post, canlike: false, creator: true, a_categories });
-                            }
-                            else
-                            {
-                                //user is not the creator
-                                //check if user liked the post already
-                                connection.query('SELECT * from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, liked, fields)
+                                //user is logged in, verify if the user is the creator
+                                if (token[0].userID == post[0].creatorID)
                                 {
-                                    if (liked.length > 0)
+                                    //user is the creator
+                                    return res.render("posts", { post, canlike: false, creator: true, a_categories ,loggedin: user[0].username});
+                                }
+                                else
+                                {
+                                    //user is not the creator
+                                    //check if user liked the post already
+                                    connection.query('SELECT * from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, liked, fields)
                                     {
-                                        res.render("posts", { post, canlike: true, likeBtn: "Dislike", a_categories });
-                                        return;
-                                    }
-                                    return res.render("posts", { post, canlike: true, likeBtn: "Like", a_categories });
-                                })
-                            }
+                                        if (liked.length > 0)
+                                        {
+                                            res.render("posts", { post, canlike: true, likeBtn: "Dislike", a_categories ,loggedin: user[0].username});
+                                            return;
+                                        }
+                                        return res.render("posts", { post, canlike: true, likeBtn: "Like", a_categories,loggedin: user[0].username });
+                                    })
+                                }
+                            })
+
                         } else
                             return res.render("posts", { post, canlike: false, a_categories });
                     }
@@ -148,14 +221,6 @@ app.get('/posts', function (req, res)
     });
 })
 
-app.get('/comments', function (req, res)
-{
-    connection.query('SELECT * FROM categories', function (err, a_categories, fields)
-    {
-        res.render('comments', { a_categories })
-    })
-
-})
 
 app.get('/register', function (req, res)
 {
