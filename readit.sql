@@ -69,6 +69,15 @@ CREATE TABLE `likes` (
   CONSTRAINT `likes_fk_postid` FOREIGN KEY (`postID`) REFERENCES `posts` (`id`),
   CONSTRAINT `likes_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
 );
+CREATE TABLE `auth_tokens` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `userID` int unsigned NOT NULL,
+  `token` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `auth_fk_userid_idx` (`userID`),
+  CONSTRAINT `auth_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
+);
+
 
 SET FOREIGN_KEY_CHECKS = 1; 
 

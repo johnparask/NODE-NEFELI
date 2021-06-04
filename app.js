@@ -3,9 +3,10 @@ const express = require('express')
 const mysql = require('mysql')
 const exphbs = require('express-handlebars');
 const path = require('path')
-const bodyParser = require("body-parser");
-const bcrypt = require('bcrypt');
-
+const bodyParser = require("body-parser"); //for reading POST data
+const bcrypt = require('bcrypt'); //for hashing passwords
+const cookieParser = require('cookie-parser'); //for reading cookies
+var crypto = require("crypto"); //for generating tokens for login cookie
 
 // initialize app
 const app = express()
@@ -103,7 +104,15 @@ app.post('/login', function (req, res)
                     if (result)
                     {
                         console.log("Logged In");
-                        res.send("Loggedin");
+                        var authToken = crypto.randomBytes(20).toString('hex');
+
+                        var expireDate = new Date(Date.now() + 90000000);
+
+                        connection.query('INSERT INTO auth_tokens VALUES(NULL,?,?,0,?)', [user[0].id, authToken, expireDate], function (err, results,)
+                        {
+                            res.cookie('readit_auth', authToken,{ expires: expireDate});
+                            res.send("Loggedin");
+                        })
                     }
                     else
                     {
