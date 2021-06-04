@@ -54,9 +54,8 @@
                                 {{this.title}} <span> # {{this.categoryName}}</span>
                             </div>
                             <div class="card-body">
-                                <br>
                                 <p>{{this.content}}</p>
-                                <br>
+                                <hr class="border-top border-white">
                                 <label for="likes" class="likesNumber0">
                                     Likes: {{this.likes}} | Comments: {{this.comments}}
                                 </label>
@@ -80,8 +79,7 @@
                         <ul class="list-group">
 
                             {{#each categories}}
-
-                            <a href="categories/{{this.id}}">
+                            <a href="/category?id={{this.id}}">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     {{this.categoryName}}
                                 </li>
