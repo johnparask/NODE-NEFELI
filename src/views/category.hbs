@@ -1,3 +1,57 @@
+<link rel="stylesheet " href="css/posts_style.css">
+
+<!-- The categorie name -->
+<div class="categorie-name text-center row">
+    <div class="backBtn col-2 my-5">
+        <a href="/categories">
+            <button><i class="fas fa-arrow-circle-left pr-2"></i>Back to all categories</button>
+        </a>
+    </div>
+    <div class="col-8 ml-3">
+        <h1 class="my-5 px-5 py-2 ml-5">Testing the site</h1>
+    </div>
+</div>
+
+
+<div class="the_body container-fluid row">
+            <!-- Categorie information -->
+            <div class="col-4">
+                <div class="categorie-info col-9">
+                    <div class="ci_box m-3 p-5">
+                        <table>
+                            <tr>
+                                <th>Categorie:</th>
+                                <th>Testing the site</th>
+                            </tr>
+                            <tr>
+                                <th>Posts:</th>
+                                <th>1</th>
+                            </tr>
+                            <tr>
+                                <th>Created by:</th>
+                                <th>vasilis</th>
+                            </tr>
+                            <tr>
+                                <th>Subscribed:</th>
+                                <th>0</th>
+                            </tr>
+                        </table>
+                        <br>
+                        <p><strong>More information: </strong> </p>
+                        <br>
+
+                        <p>
+                            This is a test paragraph. It is meant to contain the information of the specific category.
+                        </p>
+
+                    </div>
+
+                    <div class="ci_btn">
+                        <button class=" mx-5 px-5 py-2"> Subscribe </button>
+                    </div>
+                </div>
+            </div>
+
 {{#each posts}}
 <p>{{this.title}}</p>
 <p>{{this.content}}</p>
