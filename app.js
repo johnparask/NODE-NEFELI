@@ -146,9 +146,7 @@ app.post('/login', function (req, res)
                     {
                         console.log("Logged In");
                         var authToken = crypto.randomBytes(20).toString('hex');
-
                         var expireDate = new Date(Date.now() + 90000000);
-
                         connection.query('INSERT INTO auth_tokens VALUES(NULL,?,?,0,?)', [user[0].id, authToken, expireDate], function (err, results,)
                         {
                             res.cookie('readit_auth', authToken, { expires: expireDate });
@@ -179,15 +177,21 @@ app.post("/register", function (req, res)
     if (req.body.email == "" || req.body.password == "" || req.body.username == "")
         res.render("login-signup", { displayError: true, error: "One or more fields where empty!" });
 
-    connection.query('INSERT INTO users VALUES(NULL,?', [req.body.username], function (err, user, fields)
+    if (req.body.password != req.body.con_password)
+        res.render("login-signup", { displayError: true, error: "Passwords don't match!" });
+
+    //hash password
+    bcrypt.genSalt(10, function (err, salt)
     {
-
-    })
-
+        bcrypt.hash(req.body.password, salt, function (err, hash)
+        {
+            connection.query('INSERT INTO users VALUES(NULL,?,?,?,?,?,?)', [req.body.firstname, req.body.lastname, req.body.username, hash, req.body.bday, req.body.email], function (err, user, fields)
+            {
+                console.log("Account created!");
+                res.redirect("/login");
+            });
+        });
+    });
 })
-
-
-
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
