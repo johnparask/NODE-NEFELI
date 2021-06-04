@@ -7,12 +7,15 @@ const bodyParser = require("body-parser"); //for reading POST data
 const bcrypt = require('bcrypt'); //for hashing passwords
 const cookieParser = require('cookie-parser'); //for reading cookies
 var crypto = require("crypto"); //for generating tokens for login cookie
+const e = require('express');
 
 // initialize app
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 // initialize creds
 const port = 2710
@@ -82,7 +85,39 @@ app.get('/comments', function (req, res)
 
 app.get('/login', function (req, res)
 {
-    res.render('login-signup')
+    if (req.cookies.readit_auth != undefined)
+    {
+        //auth token found
+        connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+        {
+            if (err) throw err
+
+            if (token.length > 0)
+            {
+                if (token)
+                {
+                    //token verified in database
+                    //check if token is expired
+                    if (token[0].expireDate <= new Date(Date.now()))
+                    {
+                        //token is expired
+                        connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,)
+                        {
+                            res.send("Session expired, please login!");
+                        })
+                    }
+                    else
+                        res.send("Logged in under: " + token[0].userID);
+                }
+                else
+                    res.render('login-signup')
+            }
+            else
+                res.render('login-signup')
+        })
+    }
+    else
+        res.render('login-signup')
 })
 
 
@@ -110,7 +145,7 @@ app.post('/login', function (req, res)
 
                         connection.query('INSERT INTO auth_tokens VALUES(NULL,?,?,0,?)', [user[0].id, authToken, expireDate], function (err, results,)
                         {
-                            res.cookie('readit_auth', authToken,{ expires: expireDate});
+                            res.cookie('readit_auth', authToken, { expires: expireDate });
                             res.send("Loggedin");
                         })
                     }
