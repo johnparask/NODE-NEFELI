@@ -77,7 +77,7 @@ app.get('/categories', function (req, res)
 app.get('/posts', function (req, res)
 {
     const postid = req.query.id;
-    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName,com.content as comCon,com.creatorID as comCreator,us.username as commentUsername FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID LEFT JOIN comments com ON q.id = com.postID LEFT JOIN users us ON com.creatorID = us.ID WHERE q.id = ?', [postid], function (err, post, fields)
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,q.creatorID,c.categoryName,com.content as comCon,com.creatorID as comCreator,us.username as commentUsername, com.date as comDate FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID LEFT JOIN comments com ON q.id = com.postID LEFT JOIN users us ON com.creatorID = us.ID WHERE q.id = ?', [postid], function (err, post, fields)
     {
         //check if user is logged in
         if (req.cookies.readit_auth != undefined)
@@ -109,7 +109,8 @@ app.get('/posts', function (req, res)
                                 return res.render("posts", { post, canlike: true, likeBtn: "Like" });
                             })
                         }
-                    }
+                    } else
+                        return res.render("posts", { post, canlike: false });
                 }
                 else
                     return res.render("posts", { post, canlike: false });
@@ -204,8 +205,8 @@ app.get('/like', function (req, res)
                                     //dislike
                                     connection.query('DELETE from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, l2, fields)
                                     {
-                                        let decreasedLikes = post[0].likes - 1; 
-                                        connection.query('UPDATE posts SET likes = ? where id = ?', [decreasedLikes,postid], function (err, newPost, fields)
+                                        let decreasedLikes = post[0].likes - 1;
+                                        connection.query('UPDATE posts SET likes = ? where id = ?', [decreasedLikes, postid], function (err, newPost, fields)
                                         {
                                             return res.redirect("/posts?id=" + postid);
                                         });
@@ -217,8 +218,8 @@ app.get('/like', function (req, res)
                                     const likedDate = new Date(Date.now());
                                     connection.query('INSERT INTO likes VALUES(NULL,?,?,?)', [postid, token[0].userID, likedDate], function (err, newLikes, fields)
                                     {
-                                        let increasedLikes = post[0].likes + 1; 
-                                        connection.query('UPDATE posts SET likes = ? where id = ?', [increasedLikes,postid], function (err, newPost, fields)
+                                        let increasedLikes = post[0].likes + 1;
+                                        connection.query('UPDATE posts SET likes = ? where id = ?', [increasedLikes, postid], function (err, newPost, fields)
                                         {
                                             return res.redirect("/posts?id=" + postid);
                                         });
@@ -297,10 +298,10 @@ app.post("/register", function (req, res)
     //validate data
 
     if (req.body.email == "" || req.body.password == "" || req.body.username == "")
-        res.render("login-signup", { displayError: true, error: "One or more fields where empty!" });
+        return res.render("login-signup", { displayError: true, error: "One or more fields where empty!" });
 
     if (req.body.password != req.body.con_password)
-        res.render("login-signup", { displayError: true, error: "Passwords don't match!" });
+        return res.render("login-signup", { displayError: true, error: "Passwords don't match!" });
 
     //hash password
     bcrypt.genSalt(10, function (err, salt)
@@ -314,6 +315,41 @@ app.post("/register", function (req, res)
             });
         });
     });
+})
+
+app.post("/comment", function (req, res)
+{
+    console.log("POST: submit comment request..");
+
+    //verify if user is logged in
+    if (req.cookies.readit_auth != undefined)
+    {
+        connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+        {
+            if (token.length > 0)
+            {
+                if (token)
+                {
+                    //user is logged in
+                    if (req.body.commentContent == "")
+                    {
+                        return res.send("Comment can not be empty");
+                    }
+
+                    var currentDate = new Date(Date.now());
+                    connection.query('INSERT INTO comments VALUES(NULL,?,0,?,?,?)', [req.body.commentContent, currentDate, token[0].userID, req.body.postid], function (err, user, fields)
+                    {
+                        return res.redirect("/posts?id=" + req.body.postid);
+                    })
+                }
+                else
+                    return res.send("Login to comment! <a href=\"/login\">Click here</a>");
+            }
+            else
+                return res.send("Login to comment! <a href=\"/login\">Click here</a>");
+        })
+    } else
+        return res.send("Login to comment! <a href=\"/login\">Click here</a>");
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
