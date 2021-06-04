@@ -24,9 +24,9 @@ const port = 2710
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '',
     database: 'readit',
-    port: '3306'
+    port: '33060'
 });
 
 connection.connect(function (err)
