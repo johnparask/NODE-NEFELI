@@ -9,23 +9,12 @@
 
         <div class="mx-2 my-0">
             <ul class="categ-list col-12">
+                {{#each categories}}
                 <li>
                     <input type="checkbox" id="categ-check">
-                    <label for="name1">#Categorie 1</label>
+                    <label for="name1">{{this.categoryName}}</label>
                 </li>
-                <li>
-                    <input type="checkbox" id="categ-check">
-                    <label for="name2">#Categorie 2</label><br>
-                </li>
-                <li>
-                    <input type="checkbox" id="categ-check">
-                    <label for="name3"> #Categorie 3</label><br>
-                </li>
-                <li>
-                    <input type="checkbox" id="categ-check">
-                    <label for="name4"> #Categorie 4</label><br>
-                </li>
-
+                {{/each}}
             </ul>
         </div>
 
@@ -61,103 +50,20 @@
 
         <div class="main-body row px-4 text-center">
             <ul class="row">
-                <a href="posts.html">
+                {{#each categories}}
+                <a href="/category?id={{this.id}}">
                     <li>
                         <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
+                            <label for="">Categorie: {{this.categoryName}}</label><br>
+                            <label for=""> Created by: {{this.username}}</label><br>
+                            <label for="">Posts: {{this.posts}}</label><br>
 
-                            <label for="">Subscribed: 100</label>
+                            <label for="">Subscribed: {{this.subscriptions}}</label>
                         </div>
                     </li>
                 </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
-
-                <a href="posts.html">
-                    <li>
-                        <div>
-                            <label for="">Categorie: name1</label><br>
-                            <label for=""> Created by: name1</label><br>
-                            <label for="">Posts: 100</label><br>
-
-                            <label for="">Subscribed: 100</label>
-                        </div>
-                    </li>
-                </a>
+                {{/each}}
             </ul>
-
         </div>
     </div>
 </div>

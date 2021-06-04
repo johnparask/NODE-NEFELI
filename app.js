@@ -70,8 +70,11 @@ app.get('/', function (req, res)
 //Get requests
 app.get('/categories', function (req, res)
 {
-    
-    res.render('categories')
+    connection.query('SELECT cat.id,cat.categoryName,cat.info,cat.creatorID,cat.subscriptions,cat.posts,us.username FROM categories cat LEFT JOIN users us ON cat.creatorID = us.id', function (err, categories, fields)
+    {
+        if (err) throw err
+        res.render('categories' , {categories})
+    });
 })
 
 app.get('/posts', function (req, res)

@@ -15,10 +15,12 @@ CREATE TABLE `categories` (
   `categoryName` text NOT NULL,
   `info` varchar(255) NOT NULL,
   `creatorID` int unsigned NOT NULL,
+  `subscriptions` int unsigned NOT NULL DEFAULT '0',
+  `posts` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `categories_fk_userid_idx` (`creatorID`),
   CONSTRAINT `categories_fk_userid` FOREIGN KEY (`creatorID`) REFERENCES `users` (`id`)
-);
+)
 CREATE TABLE `comments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `content` longtext NOT NULL,
