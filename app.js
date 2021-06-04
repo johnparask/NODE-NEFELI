@@ -157,16 +157,32 @@ app.post('/login', function (req, res)
                     }
                     else
                     {
-                        res.render("login-signup", { displayError: true })
+                        res.render("login-signup", { displayError: true, error: "Invalid credentials!" })
                     }
                 });
             }
             else
-                res.render("login-signup", { displayError: true })
+                res.render("login-signup", { displayError: true, error: "Invalid credentials!" })
         }
         else
-            res.render("login-signup", { displayError: true })
+            res.render("login-signup", { displayError: true, error: "Invalid credentials!" })
     });
+
+})
+
+app.post("/register", function (req, res)
+{
+    console.log("POST: register request..");
+
+    //validate data
+
+    if (req.body.email == "" || req.body.password == "" || req.body.username == "")
+        res.render("login-signup", { displayError: true, error: "One or more fields where empty!" });
+
+    connection.query('INSERT INTO users VALUES(NULL,?', [req.body.username], function (err, user, fields)
+    {
+
+    })
 
 })
 

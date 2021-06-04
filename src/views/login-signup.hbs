@@ -1,7 +1,7 @@
 <!--Login - SignUp File-->
 
 {{#if displayError}}
-<p class="text-center mt-5" style="color:red;font-size:large;">Invalid Credentials!</p>
+<p class="text-center mt-5" style="color:red;font-size:large;">{{error}}</p>
 {{/if}}
 <!--LOGIN/SIGNUP FORM-->
 <section class="login-signup">
@@ -76,29 +76,47 @@
 
                 </form>
 
-                <form action="#" class="signup">
+                <form action="/register" method="POST" class="signup" style="display:none" id="registerForm">
 
                     <div class="field">
 
-                        <input type="text" placeholder="Email Address" required>
+                        <input type="text" placeholder="Email Address" name="email" required>
 
                     </div>
 
                     <div class="field">
 
-                        <input type="text" placeholder="Username" required>
+                        <input type="text" placeholder="Username" name="username" required>
 
                     </div>
 
                     <div class="field">
 
-                        <input type="password" placeholder="Password" required>
+                        <input type="text" placeholder="First name" name="firstname" required>
 
                     </div>
 
                     <div class="field">
 
-                        <input type="password" placeholder="Confirm password" required>
+                        <input type="text" placeholder="Last name" name="lastname" required>
+
+                    </div>
+
+                    <div class="field">
+
+                        <input type="date" placeholder="Birthdate" name="bday" required>
+
+                    </div>
+
+                    <div class="field">
+
+                        <input type="password" placeholder="Password" name="password" required>
+
+                    </div>
+
+                    <div class="field">
+
+                        <input type="password" placeholder="Confirm password" name="con_password" required>
 
                     </div>
 
@@ -134,11 +152,14 @@
     {
         loginForm.style.marginLeft = "-50%";
         loginText.style.marginLeft = "-50%";
+        document.getElementById("registerForm").style = "display:block;";
+
     });
     loginBtn.onclick = (() =>
     {
         loginForm.style.marginLeft = "0%";
         loginText.style.marginLeft = "0%";
+          document.getElementById("registerForm").style = "display:none;";
     });
     signupLink.onclick = (() =>
     {
