@@ -7,8 +7,7 @@ const bodyParser = require("body-parser"); //for reading POST data
 const bcrypt = require('bcrypt'); //for hashing passwords
 const cookieParser = require('cookie-parser'); //for reading cookies
 var crypto = require("crypto"); //for generating tokens for login cookie
-const e = require('express');
-const { exit, nextTick } = require('process');
+
 
 // initialize app
 const app = express()
@@ -71,6 +70,7 @@ app.get('/', function (req, res)
 //Get requests
 app.get('/categories', function (req, res)
 {
+
     res.render('categories')
 })
 
