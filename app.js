@@ -305,6 +305,26 @@ app.get('/profile', function (req, res) {
     }
 })
 
+app.get('/logout', function (requestini, responsini) {
+    //verify if user is logged in
+    if (requestini.cookies.readit_auth != undefined) {
+        connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [requestini.cookies.readit_auth], function (err, token, fields) {
+            if (token.length > 0) {
+                if (token) { 
+                    connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,) {
+                        return responsini.redirect('/login')
+                    })
+                }
+                else {
+                    return responsini.redirect('/')
+                }
+            }
+            else {
+                return responsini.redirect('/')
+            }
+        })
+    }
+})
 
 //Post Requests
 app.post('/login', function (req, res) {
@@ -343,7 +363,6 @@ app.post("/register", function (req, res) {
     console.log("POST: register request..");
 
     //validate data
-
     if (req.body.email == "" || req.body.password == "" || req.body.username == "")
         return res.render("login-signup", { displayError: true, error: "One or more fields where empty!" });
 
@@ -431,28 +450,39 @@ app.post("/changeProfile", function (req, res) {
                 if (token) {
                     //user is logged in
 
-                    if (req.body.username != "")
-                    {
-                        console.log(req.body.username);
+                    if (req.body.username != undefined) {
+                        connection.query("UPDATE users SET username = ? WHERE id = ? ", [req.body.username, token[0].id], function () {
+                            return res.redirect("/profile")
+                        })
                     }
-                    else if (req.body.fname != "")
-                    {
-
+                    else if (req.body.fname != undefined) {
+                        connection.query("UPDATE users SET firstName = ? WHERE id = ? ", [req.body.fname, token[0].id], function () {
+                            return res.redirect("/profile")
+                        })
                     }
-                    else if (req.body.lname != "")
-                    {
-
+                    else if (req.body.lname != undefined) {
+                        connection.query("UPDATE users SET lastName = ? WHERE id = ? ", [req.body.lname, token[0].id], function () {
+                            return res.redirect("/profile")
+                        })
                     }
-                    else if (req.body.email != "")
-                    {
-
+                    else if (req.body.email != undefined) {
+                        connection.query("UPDATE users SET email = ? WHERE id = ? ", [req.body.email, token[0].id], function () {
+                            return res.redirect("/profile")
+                        })
                     }
-                    else if (req.body.password != "")
-                    {
-
+                    else if (req.body.password != undefined) {
+                        //hash password
+                        bcrypt.genSalt(10, function (err, salt) {
+                            bcrypt.hash(req.body.password, salt, function (err, hash) {
+                                console.log(hash)
+                                connection.query('UPDATE users SET password = ? WHERE id = ? ', [hash, token[0].id], function (err, user, fields) {
+                                    console.log("Password changed!");
+                                    res.redirect("/profile");
+                                });
+                            });
+                        });
                     }
-                    else
-                    {
+                    else {
                         return res.send("Login to comment! <a href=\"/login\">Click here</a>");
                     }
 
