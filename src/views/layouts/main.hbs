@@ -12,7 +12,8 @@
     <meta property="og:locale " content="en_US " />
     <meta property="og:type " content="website " />
     <meta property="og:title " content="ReadIT | Connect with anyone, from anywhere. " />
-    <meta property="og:description " content="Connect with everyone on the pixel world until you go out on the real world. " />
+    <meta property="og:description "
+        content="Connect with everyone on the pixel world until you go out on the real world. " />
     <meta property="og:url " content=" " />
     <meta property="og:site_name " content="ReadIT" />
     <meta property="og:image " content="" />
@@ -50,7 +51,9 @@
 
                                 {{!-- <i class="fas fa-users"></i> --}}
 
-                                <label for="headname" class="headname"><a href="/" style="text-decoration:none; color:white"><img src="image/6dots3.png" alt=""> ReadIT </a></label>
+                                <label for="headname" class="headname"><a href="/"
+                                        style="text-decoration:none; color:white"><img src="image/6dots3.png" alt="">
+                                        ReadIT </a></label>
 
                             </div>
 
@@ -68,11 +71,12 @@
 
                             <div class="dropdown col-3 my-auto">
 
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                                     <i class="fas fa-user"></i>
 
-                                  username
+                                    username
 
                                 </button>
 
@@ -92,7 +96,7 @@
         </section>
 
 
-            {{{body}}}
+        {{{body}}}
 
 
         <!--CREATE NEW POST-->
@@ -107,19 +111,25 @@
                 <div class="icon"><i class="fas fa-plus"></i></div>
 
                 <h3>Create a new Post!</h3>
+                <form action="createPost" method="POST">
+                    <div>
+                        <select class="mx-5 mt-5">
+                            <option value="" selected disabled>Choose Category</option>
+                             {{#each categories}}
+                                
+                             {{/each}}
+                        </select>
+                    </div>
 
-                <div>
-                    <input type="text" placeholder="Categorie Name..." class="mx-5 mt-5">
-                </div>
+                    <div class="create_posts mx-5 my-1">
 
-                <div class="create_posts mx-5 my-1">
+                        <textarea id="c_posts" class="txtArea" name="c_posts" rows="3" cols="30"
+                            placeholder="Write your post..."></textarea>
 
-                    <textarea id="c_posts" class="txtArea" name="c_posts" rows="3" cols="30" placeholder="Write your post..."></textarea>
+                        <button class="txtAreaBtn"> Create Post</button>
+                    </div>
+                </form>
 
-                    <button class="txtAreaBtn"> Create Post</button>
-                </div>
-
-                
 
             </div>
 
