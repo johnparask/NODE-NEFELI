@@ -1,15 +1,14 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE TABLE `users` (
+CREATE TABLE `auth_tokens` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `birthDate` date NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `userID` int unsigned NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expired` int NOT NULL DEFAULT '0',
+  `expireDate` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
+  KEY `auth_fk_userid_idx` (`userID`),
+  CONSTRAINT `auth_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
 );
 CREATE TABLE `categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -19,6 +18,30 @@ CREATE TABLE `categories` (
   PRIMARY KEY (`id`),
   KEY `categories_fk_userid_idx` (`creatorID`),
   CONSTRAINT `categories_fk_userid` FOREIGN KEY (`creatorID`) REFERENCES `users` (`id`)
+);
+CREATE TABLE `comments` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `content` longtext NOT NULL,
+  `likes` int unsigned NOT NULL DEFAULT '0',
+  `date` datetime NOT NULL,
+  `creatorID` int unsigned NOT NULL,
+  `postID` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `comments_fk_userid_idx` (`creatorID`),
+  KEY `comments_fk_postid_idx` (`postID`),
+  CONSTRAINT `comments_fk_postid` FOREIGN KEY (`postID`) REFERENCES `posts` (`id`),
+  CONSTRAINT `comments_fk_userid` FOREIGN KEY (`creatorID`) REFERENCES `users` (`id`)
+);
+CREATE TABLE `likes` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `postID` int unsigned NOT NULL,
+  `userID` int unsigned NOT NULL,
+  `likedDate` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `likes_fk_userid_idx` (`userID`),
+  KEY `likes_fk_postid_idx` (`postID`),
+  CONSTRAINT `likes_fk_postid` FOREIGN KEY (`postID`) REFERENCES `posts` (`id`),
+  CONSTRAINT `likes_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
 );
 CREATE TABLE `posts` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -45,39 +68,17 @@ CREATE TABLE `subscriptions` (
   CONSTRAINT `subs_fk_categoryid` FOREIGN KEY (`categoryID`) REFERENCES `categories` (`id`),
   CONSTRAINT `subs_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
 );
-CREATE TABLE `comments` (
+CREATE TABLE `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `content` longtext NOT NULL,
-  `likes` int unsigned NOT NULL DEFAULT '0',
-  `date` date NOT NULL,
-  `creatorID` int unsigned NOT NULL,
-  `postID` int unsigned NOT NULL,
+  `firstName` varchar(255) NOT NULL,
+  `lastName` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `birthDate` date NOT NULL,
+  `email` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `comments_fk_userid_idx` (`creatorID`),
-  KEY `comments_fk_postid_idx` (`postID`),
-  CONSTRAINT `comments_fk_postid` FOREIGN KEY (`postID`) REFERENCES `posts` (`id`),
-  CONSTRAINT `comments_fk_userid` FOREIGN KEY (`creatorID`) REFERENCES `users` (`id`)
+  UNIQUE KEY `username_UNIQUE` (`username`)
 );
-CREATE TABLE `likes` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `postID` int unsigned NOT NULL,
-  `userID` int unsigned NOT NULL,
-  `likedDate` date NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `likes_fk_userid_idx` (`userID`),
-  KEY `likes_fk_postid_idx` (`postID`),
-  CONSTRAINT `likes_fk_postid` FOREIGN KEY (`postID`) REFERENCES `posts` (`id`),
-  CONSTRAINT `likes_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
-);
-CREATE TABLE `auth_tokens` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `userID` int unsigned NOT NULL,
-  `token` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `auth_fk_userid_idx` (`userID`),
-  CONSTRAINT `auth_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
-);
-
 
 SET FOREIGN_KEY_CHECKS = 1; 
 
