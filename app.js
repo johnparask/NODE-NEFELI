@@ -24,9 +24,9 @@ const port = 2710
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'root',
     database: 'readit',
-    port: '33060'
+    port: '3306'
 });
 
 connection.connect(function (err)
@@ -70,7 +70,7 @@ app.get('/', function (req, res)
 //Get requests
 app.get('/categories', function (req, res)
 {
-
+    
     res.render('categories')
 })
 
