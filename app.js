@@ -161,7 +161,7 @@ app.get('/register', function (req, res)
 {
     connection.query('SELECT * FROM categories', function (err, a_categories, fields)
     {
-        res.redirect("/login",{ a_categories });
+        res.redirect("/login", { a_categories });
     })
 })
 
@@ -380,6 +380,40 @@ app.post("/comment", function (req, res)
                 return res.send("Login to comment! <a href=\"/login\">Click here</a>");
         })
     } else
+        return res.send("Login to comment! <a href=\"/login\">Click here</a>");
+})
+
+app.post('/createPost', function (req, res)
+{
+    console.log("POST: submit create post request..");
+    //verify if user is logged in
+    if (req.cookies.readit_auth != undefined)
+    {
+        connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+        {
+            if (token.length > 0)
+            {
+                if (token)
+                {
+                    //user is logged in
+                    if (req.body.c_posts == "" || req.body.title == "")
+                    {
+                        return res.send("Post can not be empty");
+                    }
+                    var currentDate = new Date(Date.now());
+                    connection.query('INSERT INTO posts VALUES(NULL,?,?,0,0,?,?,?)', [req.body.title, req.body.c_posts,req.body.post_category, token[0].userID, currentDate], function (err, newpost, fields)
+                    {
+                        return res.redirect("/posts?id=" + newpost.insertId);
+                    })
+                }
+                else
+                    return res.send("Login to comment! <a href=\"/login\">Click here</a>");
+            }
+            else
+                return res.send("Login to comment! <a href=\"/login\">Click here</a>");
+        })
+    }
+    else
         return res.send("Login to comment! <a href=\"/login\">Click here</a>");
 })
 
