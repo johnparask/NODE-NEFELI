@@ -103,10 +103,10 @@ app.get('/posts', function (req, res)
                             {
                                 if (liked.length > 0)
                                 {
-                                    res.render("posts", { post, canlike: true, likeBtn:"Dislike" });
+                                    res.render("posts", { post, canlike: true, likeBtn: "Dislike" });
                                     return;
                                 }
-                                return res.render("posts", { post, canlike: true, likeBtn:"Like" });
+                                return res.render("posts", { post, canlike: true, likeBtn: "Like" });
                             })
                         }
                     }
@@ -169,6 +169,83 @@ app.get('/login', function (req, res)
     else
     {
         res.render('login-signup')
+    }
+})
+
+app.get('/like', function (req, res)
+{
+
+    const postid = req.query.id;
+
+    //check if user is logged in
+    if (req.cookies.readit_auth != undefined)
+    {
+        connection.query('SELECT creatorID,likes from posts WHERE id = ?', [postid], function (err, post, fields)
+        {
+            connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+            {
+                if (token.length > 0)
+                {
+                    if (token)
+                    {
+                        //token verified
+                        if (token[0].userID == post[0].creatorID)
+                        {
+                            //user is the creator, can not like
+                            return res.send("You can not like your own post...duh");
+                        }
+                        else
+                        {
+                            //perform like/dislike
+                            //check if user already liked
+                            connection.query('SELECT * from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, liked, fields)
+                            {
+                                if (liked.length > 0)
+                                {
+                                    //dislike
+                                    connection.query('DELETE from likes where postID = ? AND userID = ?', [postid, token[0].userID], function (err, l2, fields)
+                                    {
+                                        let decreasedLikes = post[0].likes - 1; 
+                                        connection.query('UPDATE posts SET likes = ? where id = ?', [decreasedLikes,postid], function (err, newPost, fields)
+                                        {
+                                            return res.redirect("/posts?id=" + postid);
+                                        });
+                                    });
+                                }
+                                else
+                                {
+                                    //like
+                                    const likedDate = new Date(Date.now());
+                                    connection.query('INSERT INTO likes VALUES(NULL,?,?,?)', [postid, token[0].userID, likedDate], function (err, newLikes, fields)
+                                    {
+                                        let increasedLikes = post[0].likes + 1; 
+                                        connection.query('UPDATE posts SET likes = ? where id = ?', [increasedLikes,postid], function (err, newPost, fields)
+                                        {
+                                            return res.redirect("/posts?id=" + postid);
+                                        });
+                                    });
+                                }
+                            })
+                        }
+                    }
+                    else
+                    {
+                        //user is not logged in
+                        return res.send("Login to like! <a href=\"/login\">Click here</a>");
+                    }
+                }
+                else
+                {
+                    //user is not logged in
+                    return res.send("Login to like! <a href=\"/login\">Click here</a>");
+                }
+            })
+        })
+    }
+    else
+    {
+        //user is not logged in
+        return res.send("Login to like! <a href=\"/login\">Click here</a>");
     }
 })
 

@@ -8,7 +8,7 @@
 <p>likes {{this.likes}}</p>
 
 {{#if ../canlike}}
-<button class="btn btn-primary" onclick="/like?id={{this.id}}">{{../likeBtn}}</button>
+<button class="btn btn-primary" onclick="location.href='/like?id={{this.id}}'">{{../likeBtn}}</button>
 {{/if }}
 
 {{/each}}
