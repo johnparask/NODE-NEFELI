@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt'); //for hashing passwords
 const cookieParser = require('cookie-parser'); //for reading cookies
 var crypto = require("crypto"); //for generating tokens for login cookie
 const e = require('express');
+const { exit, nextTick } = require('process');
 
 // initialize app
 const app = express()
@@ -75,7 +76,61 @@ app.get('/categories', function (req, res)
 
 app.get('/posts', function (req, res)
 {
-    res.render('posts')
+    const postid = req.query.id;
+
+    connection.query('SELECT q.id,q.title,q.content,q.likes,q.comments,p.username,c.categoryName FROM posts q LEFT JOIN users p ON p.id = q.creatorID LEFT JOIN categories c ON c.id = q.categoryID WHERE q.id = ?;', [postid], function (err, post, fields)
+    {
+        if (err)
+        {
+            console.log(err);
+            res.sendStatus(500);
+            return;
+        }
+        if (post != undefined)
+        {
+            if (post.length > 0)
+            {
+                if (post)
+                {
+                    //check if user is the owner
+                    if (req.cookies.readit_auth != undefined)
+                    {
+                        connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
+                        {
+                            if (err)
+                            {
+                                console.log(err);
+                                return res.sendStatus(500);
+                            }
+                            if (token.length > 0)
+                            {
+                                if (token)
+                                {
+                                    //token verified in database
+                                    //check if token is expired
+                                    if (token[0].expireDate <= new Date(Date.now()))
+                                    {
+                                        //token is expired
+                                        //update expired flag
+                                        connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,)
+                                        {
+                                            return res.render('posts', { post, ismine: false })
+                                        })
+                                    }
+                                    else
+                                    {
+                                        return res.render('posts', { post, ismine: true })
+                                    }
+                                }
+                            }
+                            return res.render('posts', { post, ismine: false })
+                        })
+                    }
+                }
+            }
+        }
+    });
+
 })
 
 app.get('/comments', function (req, res)
@@ -95,7 +150,12 @@ app.get('/login', function (req, res)
         //auth token found
         connection.query('SELECT * FROM auth_tokens WHERE token = ? AND expired = 0', [req.cookies.readit_auth], function (err, token, fields)
         {
-            if (err) throw err
+            if (err)
+            {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            }
 
             if (token.length > 0)
             {
@@ -110,20 +170,25 @@ app.get('/login', function (req, res)
                         connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,)
                         {
                             res.send("Session expired, please login!");
+                            return;
                         })
                     }
                     else
+                    {
                         res.send("Logged in under: " + token[0].userID);
+                        return;
+                    }
                 }
-                else
-                    res.render('login-signup')
             }
-            else
-                res.render('login-signup')
+            res.render('login-signup')
+            return;
         })
     }
     else
+    {
         res.render('login-signup')
+        return;
+    }
 })
 
 
@@ -138,7 +203,12 @@ app.post('/login', function (req, res)
         {
             if (user[0])
             {
-                if (err) throw err
+                if (err)
+                {
+                    console.log(err);
+                    res.sendStatus(500);
+                    return;
+                }
 
                 bcrypt.compare(req.body.password, user[0].password, function (err, result)
                 {

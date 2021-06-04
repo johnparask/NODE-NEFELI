@@ -1,1 +1,13 @@
 <link rel="stylesheet " href="css/posts_style.css">
+
+{{#each post}}
+
+<p>{{this.title}}</p>
+<p>{{this.content}};</p>
+<p>by {{this.username}}</p>
+<p>likes {{this.likes}}</p>
+{{/each}}
+
+{{#unless  ismine}}
+<button class="btn btn-primary" onclick="">LIKE</button>
+{{/unless }}
