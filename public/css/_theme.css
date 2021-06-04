@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -77,6 +78,22 @@
     background: #FF4242;
     transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
+
+.swiper-slide .card{
+    height: 300px;
+}
+
+.swiper-slide .content{  
+    margin: 1em 0;
+}
+
+.swiper-slide .content p{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
 
 input[type="radio"] {
     display: none;
@@ -214,7 +231,7 @@ form .btn input[type="submit"] {
     text-align: center;
     font-size: 18px;
     background: #fff;
-    
+
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -228,12 +245,12 @@ form .btn input[type="submit"] {
     -webkit-align-items: center;
     align-items: center;
 
-    
+
 }
 
 
 
-.swiper-slide a{
+.swiper-slide a {
     text-decoration: none;
     color: black;
 }
@@ -429,12 +446,12 @@ form .btn input[type="submit"] {
 
 /* trending posts */
 .swiper-slide div:first-child {
-    background-color:rgba(0, 0, 0, .6);
+    background-color: rgba(0, 0, 0, .6);
     border-radius: 10px;
     color: white;
 }
 
-.swiper-slide .card{
+.swiper-slide .card {
     padding: 10px;
 }
 
@@ -447,19 +464,20 @@ form .btn input[type="submit"] {
     background: rgb(54, 53, 53);
     border-radius: 6px;
     font-size: 1.1rem;
-    
+
 }
-.labelName span:first-child:hover{
+
+.labelName span:first-child:hover {
     cursor: pointer;
     text-decoration: underline;
 }
 
-.labelName span:last-child{
+.labelName span:last-child {
     color: rgb(240, 102, 102);
     font-size: 1rem;
 }
 
-.labelName span:last-child:hover{
+.labelName span:last-child:hover {
     color: rgb(241, 50, 50);
 }
 
@@ -471,7 +489,7 @@ form .btn input[type="submit"] {
     color: initial;
 }
 
-.trending-title{
+.trending-title {
     background-color: #FF4242;
     width: 30%;
     text-align: center;
@@ -480,7 +498,7 @@ form .btn input[type="submit"] {
     border-radius: 10px;
 }
 
-.top-categories{
+.top-categories {
     background-color: #FF4242;
     width: 50%;
     text-align: center;
@@ -491,38 +509,38 @@ form .btn input[type="submit"] {
 
 /*  top posts */
 
-.card{
-    background-color:rgba(0, 0, 0, .6);
+.card {
+    background-color: rgba(0, 0, 0, .6);
     color: white;
 }
 
-.card .card-header{
-    background-color:rgb(54, 53, 53);
+.card .card-header {
+    background-color: rgb(54, 53, 53);
     font-size: 1.1rem;
 }
 
-.card .card-header span{
-    color:rgb(240, 102, 102);
+.card .card-header span {
+    color: rgb(240, 102, 102);
     font-size: 1rem;
 }
 
-.card .card-header span:hover{
-    color:rgb(241, 50, 50);
-    cursor:default;
+.card .card-header span:hover {
+    color: rgb(241, 50, 50);
+    cursor: default;
 }
 
 /* categories */
 
-.all-categories .list-group-item{
-    background-color:rgba(0, 0, 0, .6);
+.all-categories .list-group-item {
+    background-color: rgba(0, 0, 0, .6);
     color: white;
     font-size: 1.1rem;
 }
 
-.all-categories .list-group-item span{
+.all-categories .list-group-item span {
     color: rgb(240, 102, 102);
 }
 
-.all-categories .list-group-item:hover{
+.all-categories .list-group-item:hover {
     color: rgb(240, 102, 102);
 }
