@@ -13,8 +13,8 @@
                         <a href="posts/{{this.id}}">
                             <div class="card" style="width: 20rem;">
                                 <label for="name" class="labelName">
+                                    <span>{{this.title}} <small>by</small></span>
                                     <span><i class="far fa-user-circle m-1"></i>{{this.username}}</span>
-                                    <span># Testing the site</span>
                                 </label>
 
                                 <br>
@@ -51,7 +51,7 @@
                     <a href="posts/{{this.id}}" class="text-decoration-none">
                         <div class="card mb-2">
                             <div class="card-header">
-                                REPLACE WITH TITLE <span> # {{this.categoryName}}</span>
+                                {{this.title}} <span> # {{this.categoryName}}</span>
                             </div>
                             <div class="card-body">
                                 <br>
