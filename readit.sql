@@ -84,3 +84,12 @@ CREATE TABLE `users` (
 );
 
 SET FOREIGN_KEY_CHECKS = 1; 
+
+INSERT INTO readit.categories (id, categoryName, info, creatorID, subscriptions, posts) VALUES ('1', 'Web Development', 'This is a category for all of you who want to learn how to be a developer. Share tips and ask questions to help each other!', '1', '0', '0');
+INSERT INTO readit.categories (id, categoryName, info, creatorID, subscriptions, posts) VALUES ('2', 'Cats', 'Please share your cat pictures! Cats are the very best thing that has happened to our lives.. So please so me your cats!', '1', '0', '0');
+INSERT INTO readit.categories (id, categoryName, info, creatorID, subscriptions, posts) VALUES ('3', 'Travel', 'Do you crave some new experiences? If so, this is the right category for you to make some new friends and show your travelling experiences.', '1', '0', '0');
+
+INSERT INTO readit.posts (id, title, content, likes, comments, categoryID, creatorID) VALUES ('1', 'PHP is better!', 'Do you want to be a web developer? Tip NO 1, DO NOT USE HBS! 1000 reasons why...', '0', '0', '1', '1');
+INSERT INTO readit.posts (id, title, content, likes, comments, categoryID, creatorID) VALUES ('2', 'Why to not use Elementor/WP Bakery', 'You have hands, right? Then use them! ', '0', '0', '1', '1');
+INSERT INTO readit.posts (id, title, content, likes, comments, categoryID, creatorID) VALUES ('3', 'How to annoy your hooman?', 'Do you ever think about your life choices? Do you feel like you are not annoying enough? Then, this guide will open your eyes! Run at 4 am like a ninja. Throw glasses. Chew cables (not electrical ones..). Ideally find expensive equipment and destroy it! And remember.. if your hooman is mad, show your belly >.<', '0', '0', '2', '1');
+INSERT INTO readit.posts (id, title, content, likes, comments, categoryID, creatorID) VALUES ('4', 'Do you to travel and you are working?', 'Too bad for you.. :) Wait for retirement', '0', '0', '3', '1');
