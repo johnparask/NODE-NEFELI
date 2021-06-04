@@ -83,6 +83,11 @@ app.get('/comments', function (req, res)
     res.render('comments')
 })
 
+app.get('/register', function (req, res)
+{
+    res.redirect("/login");
+})
+
 app.get('/login', function (req, res)
 {
     if (req.cookies.readit_auth != undefined)
@@ -101,6 +106,7 @@ app.get('/login', function (req, res)
                     if (token[0].expireDate <= new Date(Date.now()))
                     {
                         //token is expired
+                        //update expired flag
                         connection.query('UPDATE auth_tokens SET expired = 1 WHERE id = ?', [token[0].id], function (err, results,)
                         {
                             res.send("Session expired, please login!");
