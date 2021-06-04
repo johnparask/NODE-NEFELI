@@ -8,7 +8,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `birthDate` date NOT NULL,
   `email` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
 );
 CREATE TABLE `categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
