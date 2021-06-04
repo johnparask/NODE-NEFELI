@@ -10,6 +10,7 @@ CREATE TABLE `auth_tokens` (
   KEY `auth_fk_userid_idx` (`userID`),
   CONSTRAINT `auth_fk_userid` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)
 );
+
 CREATE TABLE `categories` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `categoryName` text NOT NULL,
@@ -20,7 +21,7 @@ CREATE TABLE `categories` (
   PRIMARY KEY (`id`),
   KEY `categories_fk_userid_idx` (`creatorID`),
   CONSTRAINT `categories_fk_userid` FOREIGN KEY (`creatorID`) REFERENCES `users` (`id`)
-)
+);
 CREATE TABLE `comments` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `content` longtext NOT NULL,
@@ -83,7 +84,3 @@ CREATE TABLE `users` (
 );
 
 SET FOREIGN_KEY_CHECKS = 1; 
-
-
-
-
