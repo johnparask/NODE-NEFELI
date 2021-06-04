@@ -4,56 +4,76 @@
 <div class="categorie-name text-center row">
     <div class="backBtn col-2 my-5">
         <a href="/categories">
-            <button><i class="fas fa-arrow-circle-left pr-2"></i>Back to all categories</button>
+            <button><i class="fas fa-arrow-circle-left pr-2"></i>Back to all</button>
         </a>
     </div>
     <div class="col-8 ml-3">
-        <h1 class="my-5 px-5 py-2 ml-5">Testing the site</h1>
+        <h1 class="my-5 px-5 py-2 ml-5">{{posts.[0].categoryName}}</h1>
     </div>
 </div>
 
 
 <div class="the_body container-fluid row">
-            <!-- Categorie information -->
-            <div class="col-4">
-                <div class="categorie-info col-9">
-                    <div class="ci_box m-3 p-5">
-                        <table>
-                            <tr>
-                                <th>Categorie:</th>
-                                <th>Testing the site</th>
-                            </tr>
-                            <tr>
-                                <th>Posts:</th>
-                                <th>1</th>
-                            </tr>
-                            <tr>
-                                <th>Created by:</th>
-                                <th>vasilis</th>
-                            </tr>
-                            <tr>
-                                <th>Subscribed:</th>
-                                <th>0</th>
-                            </tr>
-                        </table>
-                        <br>
-                        <p><strong>More information: </strong> </p>
-                        <br>
+    <!-- Categorie information -->
+    <div class="col-4">
+        <div class="categorie-info col-9">
+            <div class="ci_box m-3 p-5">
+                <table>
+                    <tr>
+                        <th>Categorie:</th>
+                        <th>{{posts.[0].categoryName}}</th>
+                    </tr>
+                    <tr>
+                        <th>Posts:</th>
+                        <th>{{posts.[0].posts}}</th>
+                    </tr>
+                    <tr>
+                        <th>Subscribed:</th>
+                        <th>{{posts.[0].subscriptions}}</th>
+                    </tr>
+                </table>
+                <br>
+                <p><strong>More information: </strong></p>
+                <p>
+                    {{posts.[0].info}}
+                </p>
 
-                        <p>
-                            This is a test paragraph. It is meant to contain the information of the specific category.
-                        </p>
-
-                    </div>
-
-                    <div class="ci_btn">
-                        <button class=" mx-5 px-5 py-2"> Subscribe </button>
-                    </div>
-                </div>
             </div>
 
-{{#each posts}}
-<p>{{this.title}}</p>
-<p>{{this.content}}</p>
-<p>{{this.username}}</p>
-{{/each}}
+            <div class="ci_btn">
+                <button class=" mx-5 px-5 py-2"> Subscribe </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- post area -->
+    <div class="posts_box col-5">
+        <!-- create posts -->
+        <div class="create_posts p-2">
+            <textarea id="c_posts" class="txtArea" name="c_posts" rows="4" cols="50"
+                placeholder="Write your post..."></textarea>
+            <button class="txtAreaBtn"> Create Post</button>
+        </div>
+
+        <!-- the posts -->
+        <div class="posts ">
+            <ul>
+                {{#each posts}}
+                <li id="a0">
+                    <div>
+                        <a href="/posts?id={{this.id}}" class="text-white" style="cursor:pointer;">
+                            <label for="title"><span id="title">{{this.title}} - {{this.username}}</span></label>
+                        </a>
+                        <p>{{this.content}}</p>
+                        <label for="likes" class="likesNumber0">Likes: {{this.likes}} | Comments:
+                            {{this.comments}}</label>
+                        <button class="likeBtn px-4 py-1"
+                            onclick="location.href='/like?id={{this.id}}'">{{likeBtn}}</button>
+                        <button class="px-3 py-1 mx-2" onclick="location.href='/posts?id={{this.id}}'">Comment</button>
+                    </div>
+
+                </li>
+                {{/each}}
+            </ul>
+        </div>
